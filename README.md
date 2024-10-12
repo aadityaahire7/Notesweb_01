@@ -1,4 +1,4 @@
-# Flask Web App Tutorial
+# Notes Web App
 
 ## Setup & Installation
 
