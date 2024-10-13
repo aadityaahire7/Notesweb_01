@@ -2,37 +2,58 @@ pipeline {
     agent any
 
     environment {
-        GITHUB_CREDENTIALS = credentials('github-creds')  // GitHub credentials
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')  // DockerHub credentials
-        DOCKER_IMAGE = '21070122001/notesapp'  // Replace with your Docker Hub repository
+        // Use the correct DockerHub credential ID from your Jenkins
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+    }
+
+    triggers {
+        githubPush()  // Automatically triggers the pipeline when a push is made to the GitHub repo
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the latest code from GitHub
-                git url: 'https://github.com/aadityaahire7/Notesweb_01.git',
-                    credentialsId: GITHUB_CREDENTIALS,
-                    branch: 'main'  // Use your main branch here
+                script {
+                    git branch: 'main',
+                        url: 'https://github.com/aadityaahire7/Notesweb_01.git'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image using the Dockerfile in the repository
-                    docker.build("${DOCKER_IMAGE}:latest", ".")  // Assuming your Dockerfile is in the root
+                    // Build the Docker image with your Docker Hub tag
+                    bat 'docker build -t "21070122001/notesapp:latest" .'
                 }
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('Login to DockerHub') {
             steps {
                 script {
-                    // Push the built Docker image to Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                        docker.image("${DOCKER_IMAGE}:latest").push()
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        bat '''
+                        docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASSWORD%
+                        '''
                     }
+                }
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    // Push the Docker image to DockerHub
+                    bat 'docker push 21070122001/notesapp:latest'
+                }
+            }
+        }
+
+        stage('Logout from DockerHub') {
+            steps {
+                script {
+                    bat 'docker logout'
                 }
             }
         }
@@ -40,15 +61,18 @@ pipeline {
 
     post {
         always {
-            cleanWs() // Clean workspace after every build
+            script {
+                // Clean the workspace after the pipeline run
+                node {
+                    cleanWs()
+                }
+            }
         }
-
-        success {
-            echo 'Build succeeded! Docker image pushed to Docker Hub.'
-        }
-
         failure {
             echo 'Build failed!'
+        }
+        success {
+            echo 'Build succeeded!'
         }
     }
 }
