@@ -2,20 +2,21 @@ pipeline {
     agent any
 
     environment {
-        // Use the correct DockerHub credential ID from your Jenkins
+        // Use the correct DockerHub and AWS credentials IDs from your Jenkins
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        AWS_ACCESS_KEYS = credentials('IAM_AWS')  // AWS credentials
     }
 
     triggers {
-        githubPush()  // Automatically triggers the pipeline when a push is made to the GitHub repo
+        githubPush()  // Automatically triggers the pipeline on a push to the GitHub repo
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    git branch: 'main',
-                        url: 'https://github.com/aadityaahire7/Notesweb_01.git'
+                    // Checkout code from the GitHub repository
+                    git branch: 'main', url: 'https://github.com/aadityaahire7/Notesweb_01.git'
                 }
             }
         }
@@ -23,7 +24,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image with your Docker Hub tag
+                    // Build the Docker image with the tag notesapp:latest
                     bat 'docker build -t "21070122001/notesapp:latest" .'
                 }
             }
@@ -33,9 +34,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                        bat '''
-                        docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASSWORD%
-                        '''
+                        // Login to Docker Hub
+                        bat 'docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASSWORD%'
                     }
                 }
             }
@@ -44,8 +44,44 @@ pipeline {
         stage('Push Docker Image to DockerHub') {
             steps {
                 script {
-                    // Push the Docker image to DockerHub
+                    // Push the notesapp:latest image to Docker Hub
                     bat 'docker push 21070122001/notesapp:latest'
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                script {
+                    // Change directory to the terraform folder
+                    dir('terraform') {
+                        // Initialize Terraform
+                        bat 'terraform init'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                script {
+                    // Change directory to the terraform folder
+                    dir('terraform') {
+                        // Run Terraform Plan
+                        bat 'terraform plan'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    // Change directory to the terraform folder
+                    dir('terraform') {
+                        // Apply Terraform changes
+                        bat 'terraform apply -auto-approve'
+                    }
                 }
             }
         }
@@ -53,6 +89,7 @@ pipeline {
         stage('Logout from DockerHub') {
             steps {
                 script {
+                    // Logout from Docker Hub
                     bat 'docker logout'
                 }
             }
@@ -63,9 +100,7 @@ pipeline {
         always {
             script {
                 // Clean the workspace after the pipeline run
-                node {
-                    cleanWs()
-                }
+                cleanWs()
             }
         }
         failure {
