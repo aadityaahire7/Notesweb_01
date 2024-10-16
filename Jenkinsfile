@@ -25,12 +25,8 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-<<<<<<< HEAD
                     sh 'docker build -t anujeshansh/notesapp:latest .'
-=======
                     // Build the Docker image with your Docker Hub tag
-                    sh 'docker build -t 21070122022/notesapp:latest .'
->>>>>>> parent of 5fa5dda (changed the repositories name)
                 }
             }
         }
