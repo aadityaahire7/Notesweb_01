@@ -10,6 +10,7 @@ pipeline {
 
     triggers {
         githubPush()  // Trigger on push to GitHub
+    
     }
 
     stages {
