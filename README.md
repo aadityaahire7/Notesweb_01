@@ -1,5 +1,5 @@
 # Notes Web App 
-<br> Checking the Jenkins pipeline working
+<br> Checking the Jenkins pipeline working with terrafomr 
 
 ## Setup & Installation
 
