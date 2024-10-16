@@ -3,14 +3,11 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        
-        // Add Docker's path
         PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Docker.app/Contents/Resources/bin:/opt/homebrew/bin:${env.PATH}"
     }
 
     triggers {
-        githubPush()  // Trigger on push to GitHub
-    
+        githubPush()  
     }
 
     stages {
@@ -28,8 +25,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    // Build the Docker image with your Docker Hub tag
-                    sh 'docker build -t anujeshansh/notesapp:latest .'
+                    sh 'docker build -t 21070122022/notesapp:latest .'
                 }
             }
         }
@@ -47,12 +43,20 @@ pipeline {
             }
         }
 
+        stage('Run Tests with Pytest') {
+            steps {
+                script {
+                    echo "Running tests with pytest..."
+                    sh 'docker run --rm -v $(pwd):/app -w /app 21070122022/notesapp:latest pytest tests'
+                }
+            }
+        }
+
         stage('Push Docker Image to DockerHub') {
             steps {
                 script {
                     echo "Pushing Docker image to DockerHub..."
-                    // Push the Docker image to DockerHub
-                    sh 'docker push anujeshansh/notesapp:latest'
+                    sh 'docker push 21070122022/notesapp:latest'
                 }
             }
         }
@@ -70,7 +74,7 @@ pipeline {
     post {
         always {
             echo "Cleaning up the workspace..."
-            cleanWs()  // Clean workspace after the build
+            cleanWs()  
         }
         failure {
             echo 'Build failed!'
