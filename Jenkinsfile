@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     echo "Running tests with pytest and generating XML report..."
-                    sh 'docker run --rm -v $(pwd):/app -w /app 21070122022/notesapp:latest pytest tests --junitxml=result.xml'
+                    sh 'docker run --rm -v $(pwd):/app -w /app -e PYTHONPATH=/app 21070122022/notesapp:latest pytest tests --junitxml=result.xml'
                 }
             }
         }
