@@ -1,5 +1,5 @@
 variable "instance_type" {
-  default = "t2.medium "  # Instance type
+  default = "t2.medium"  # Instance type
 }
 
 variable "docker_image" {
