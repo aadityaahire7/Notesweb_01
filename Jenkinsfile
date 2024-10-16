@@ -47,6 +47,8 @@ pipeline {
                     sh 'docker push 21070122022/notesapp:latest'
                 }
             }
+
+            
         }
 
         stage('Logout from DockerHub') {
