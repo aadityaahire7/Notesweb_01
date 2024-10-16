@@ -7,41 +7,21 @@ sudo service docker start
 
 # Pull and run the notesapp Docker image
 sudo docker pull 21070122001/notesapp:latest
-sudo docker run -p 5000:5000 21070122001/notesapp:latest
+sudo docker run -d -p 5000:5000 21070122001/notesapp:latest
 
-# Install Java (required for ELK stack)
-sudo yum install java-1.8.0-openjdk.x86_64 -y
+# Pull Elasticsearch, Logstash, and Kibana Docker images
+sudo docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+sudo docker pull docker.elastic.co/logstash/logstash:7.10.0
+sudo docker pull docker.elastic.co/kibana/kibana:7.10.0
 
-# Install Elasticsearch
-sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
-sudo tee /etc/yum.repos.d/elasticsearch.repo <<EOF
-[elasticsearch]
-name=Elasticsearch repository for 7.x packages
-baseurl=https://artifacts.elastic.co/packages/7.x/yum
-gpgcheck=1
-gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
-enabled=1
-autorefresh=1
-type=rpm-md
-EOF
-sudo yum install elasticsearch -y
-sudo systemctl start elasticsearch
-sudo systemctl enable elasticsearch
+# Run Elasticsearch container
+sudo docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.0
 
-# Install Logstash
-sudo yum install logstash -y
-sudo systemctl start logstash
-sudo systemctl enable logstash
+# Run Logstash container
+sudo docker run -d --name logstash -p 5044:5044 -p 9600:9600 docker.elastic.co/logstash/logstash:7.10.0
 
-# Install Kibana
-sudo yum install kibana -y
-sudo systemctl start kibana
-sudo systemctl enable kibana
-
-# Configure firewall to allow Kibana and Elasticsearch
-sudo firewall-cmd --permanent --add-port=5601/tcp   # Kibana
-sudo firewall-cmd --permanent --add-port=9200/tcp   # Elasticsearch
-sudo firewall-cmd --reload
+# Run Kibana container
+sudo docker run -d --name kibana -p 5601:5601 --link elasticsearch:elasticsearch docker.elastic.co/kibana/kibana:7.10.0
 
 # Print completion message
-echo "ELK Stack and Docker application setup completed!"
+echo "Docker containers for notesapp, Elasticsearch, Logstash, and Kibana are running."
