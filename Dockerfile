@@ -1,3 +1,5 @@
+# Dockerfile
+
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
@@ -18,8 +20,14 @@ ENV FLASK_ENV=development
 # Ensure the instance folder for the SQLite DB exists
 RUN mkdir -p /app/instance
 
+# Set the PYTHONPATH to include the app directory
+ENV PYTHONPATH=/app
+
 # Expose port 5000 to the outside world
 EXPOSE 5000
 
-# Run Flask app with "flask run" to bind to the correct host and port
+# Initialize the database (ignore errors if the DB is already created)
+RUN flask db upgrade || true
+
+# Run the Flask app
 CMD ["flask", "run"]
