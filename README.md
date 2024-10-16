@@ -19,6 +19,6 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## Viewing The App now
+## Viewing The application
 
 Go to `http://127.0.0.1:5000`
