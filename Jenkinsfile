@@ -5,7 +5,6 @@ pipeline {
         // Use the correct DockerHub and AWS credentials IDs from your Jenkins
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         AWS_ACCESS_KEYS = credentials('IAM_AWS')  // AWS credentials
-        PATH="C:\\Program Files\\terraform_1.9.8_windows_amd64\\terraform.exe"
     }
 
     triggers {
