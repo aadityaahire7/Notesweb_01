@@ -68,60 +68,7 @@ pipeline {
                 }
             }
         }
-
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    echo "Running tests..."
-                    sh '''
-                    # Create virtual environment and activate it
-                    python -m venv venv
-                    source venv/bin/activate
-
-                    # Install dependencies
-                    pip install -r requirements.txt
-                    pip install pytest pytest-xml
-
-                    # Run tests and generate result.xml
-                    pytest tests/test_simple.py --junitxml=result.xml
-                    '''
-                }
-            }
-        }
         
-        stage('Archive Test Results') {
-            steps {
-                script {
-                    echo "Archiving test results..."
-                    archiveArtifacts artifacts: 'result.xml', allowEmptyArchive: true
-                    junit 'result.xml'
-                }
-            }
-        }
-
-        stage('Commit and Push Test Results') {
-            steps {
-                script {
-                    echo "Committing and pushing test results..."
-                    withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASSWORD')]) {
-                        sh '''
-                        git config --global user.email "anujesh.ansh.btech2021@sitpune.edu.in"
-                        git config --global user.name "Anujesh-Ansh"
-
-                        # Add result.xml to git
-                        git add result.xml
-
-                        # Commit the changes
-                        git commit -m "Add test results"
-
-                        # Push the changes
-                        git push https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/Anujesh-Ansh/Note_App-Flexi.git main
-                        '''
-                    }
-                }
-            }
-        }
 
         stage('Logout from DockerHub') {
             steps {
