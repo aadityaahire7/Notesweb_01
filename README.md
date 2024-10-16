@@ -1,7 +1,7 @@
 # Notes Web App 
 <br> Checking the Jenkins pipeline working with terrafomr 
 
-## Setup & Installation
+## Setup & Installation of project
 
 Make sure you have the latest version of Python installed.
 
