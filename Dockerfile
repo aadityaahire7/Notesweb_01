@@ -21,5 +21,8 @@ RUN mkdir -p /app/instance
 # Expose port 5000 to the outside world
 EXPOSE 5000
 
+# Add a command to initialize the database
+RUN flask db upgrade || true
+
 # Run Flask app with "flask run" to bind to the correct host and port
 CMD ["flask", "run"]
