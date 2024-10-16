@@ -3,11 +3,14 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+
+        // Add Docker's path
         PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Docker.app/Contents/Resources/bin:/opt/homebrew/bin:${env.PATH}"
     }
 
     triggers {
-        githubPush()  
+        githubPush()  // Trigger on push to GitHub
+
     }
 
     stages {
@@ -25,8 +28,8 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    sh 'docker build -t anujeshansh/notesapp:latest .'
                     // Build the Docker image with your Docker Hub tag
+                    sh 'docker build -t anujeshansh/notesapp:latest .'
                 }
             }
         }
@@ -44,48 +47,12 @@ pipeline {
             }
         }
 
-        stage('Run Tests with Pytest') {
-            steps {
-                script {
-                    echo "Running tests with pytest and generating XML report..."
-                    sh 'docker run --rm -v $(pwd):/app -w /app -e PYTHONPATH=/app 21070122022/notesapp:latest pytest tests --junitxml=result.xml'
-                }
-            }
-        }
-
-        stage('Archive Test Results') {
-            steps {
-                script {
-                    echo "Archiving pytest results..."
-                    archiveArtifacts artifacts: 'result.xml'
-                }
-            }
-        }
-
-        stage('Push Test Results to GitHub') {
-            steps {
-                script {
-                    echo "Pushing result.xml to GitHub..."
-                    sh '''
-                    git config --global user.email "youremail@example.com"
-                    git config --global user.name "Your Name"
-                    git add result.xml
-                    git commit -m "Add pytest results"
-                    git push origin main
-                    '''
-                }
-            }
-        }
-
         stage('Push Docker Image to DockerHub') {
             steps {
                 script {
                     echo "Pushing Docker image to DockerHub..."
-<<<<<<< HEAD
-=======
                     // Push the Docker image to DockerHub
->>>>>>> parent of 5fa5dda (changed the repositories name)
-                    sh 'docker push 21070122022/notesapp:latest'
+                    sh 'docker push anujeshansh/notesapp:latest'
                 }
             }
         }
@@ -103,7 +70,7 @@ pipeline {
     post {
         always {
             echo "Cleaning up the workspace..."
-            cleanWs()  
+            cleanWs()  // Clean workspace after the build
         }
         failure {
             echo 'Build failed!'
