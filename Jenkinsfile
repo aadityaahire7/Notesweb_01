@@ -29,7 +29,7 @@ pipeline {
                 script {
                     echo "Building Docker image..."
                     // Build the Docker image with your Docker Hub tag
-                    sh 'docker build -t 21070122022/notesapp:latest .'
+                    sh 'docker build -t anujeshansh/notesapp:latest .'
                 }
             }
         }
@@ -52,7 +52,7 @@ pipeline {
                 script {
                     echo "Pushing Docker image to DockerHub..."
                     // Push the Docker image to DockerHub
-                    sh 'docker push 21070122022/notesapp:latest'
+                    sh 'docker push anujeshansh/notesapp:latest'
                 }
             }
         }
