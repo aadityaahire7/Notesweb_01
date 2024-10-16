@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    sh 'docker build -t 21070122022/notesapp:latest .'
+                    sh 'docker build -t anujeshansh/notesapp:latest .'
                 }
             }
         }
@@ -66,6 +66,8 @@ pipeline {
                 script {
                     echo "Pushing result.xml to GitHub..."
                     sh '''
+                    git config --global user.email "youremail@example.com"
+                    git config --global user.name "Your Name"
                     git add result.xml
                     git commit -m "Add pytest results"
                     git push origin main
@@ -73,7 +75,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Push Docker Image to DockerHub') {
             steps {
