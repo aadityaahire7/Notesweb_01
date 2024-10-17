@@ -38,6 +38,7 @@ user_credentials = [
     {"email": "alice@example.com", "password": "alice123", "first_name": "Alice"},
 ]
 
+
 # URLs for the app
 base_url = "http://127.0.0.1:5000"
 login_url = f"{base_url}/login"
