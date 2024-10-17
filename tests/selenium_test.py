@@ -6,14 +6,14 @@ from selenium.webdriver.safari.service import Service
 
 # List of user credentials
 user_credentials = [
-    {"email": "bob@example.com", "password": "bob12h3", "first_name": "Bob"},
-    {"email": "charlie@example.com", "password": "charlie123", "first_name": "Charlie"},
-    {"email": "dave@example.com", "password": "dave123", "first_name": "Dave"},
-    {"email": "eve@example.com", "password": "eve12j3", "first_name": "Eve"},
-    {"email": "frank@example.com", "password": "frank123", "first_name": "Frank"},
-    {"email": "grace@example.com", "password": "grace123", "first_name": "Grace"},
-    {"email": "hannah@example.com", "password": "hannah123", "first_name": "Hannah"},
-    {"email": "ian@example.com", "password": "ian12j3", "first_name": "Ian"},
+    {"email": "bob@exampleas.com", "password": "bob12h3", "first_name": "Bob"},
+    {"email": "charlie@examasdple.com", "password": "charlie123", "first_name": "Charlie"},
+    {"email": "dave@exampleasd.com", "password": "dave123", "first_name": "Dave"},
+    {"email": "eve@exasdample.com", "password": "eve12j3", "first_name": "Eve"},
+    {"email": "frank@examasdple.com", "password": "frank123", "first_name": "Frank"},
+    {"email": "grace@easdxample.com", "password": "grace123", "first_name": "Grace"},
+    {"email": "hannahasd@example.com", "password": "hannah123", "first_name": "Hannah"},
+    {"email": "ian@exasample.com", "password": "ian12j3", "first_name": "Ian"},
     {"email": "james@example.com", "password": "james123", "first_name": "James"},
     {"email": "karen@example.com", "password": "karen123", "first_name": "Karen"},
     {"email": "lily@example.com", "password": "lily123", "first_name": "Lily"},
