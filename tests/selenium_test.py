@@ -56,6 +56,7 @@ for user in user_credentials:
     try:
         # Test the Sign Up Functionality
         driver.get(signup_url)
+        
 
         # Fill in the sign-up form
         driver.find_element(By.NAME, "email").send_keys(test_email)
